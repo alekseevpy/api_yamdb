@@ -8,7 +8,6 @@ class User(AbstractUser):
         ("USER", "user"),
         ("MODERATOR", "moderator"),
         ("ADMIN", "admin"),
-        ("SUPERUSER", "superuser"),
     )
 
     bio = models.TextField(
