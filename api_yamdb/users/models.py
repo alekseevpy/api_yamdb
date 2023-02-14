@@ -1,19 +1,16 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.mail import send_mail
 from django.db import models
 
-from .validators import not_me_username_validator
+from .validators import not_me_username_validator, username_validator
 
 
 class User(AbstractUser):
-
     ROLE_CHOICES = (
         ("USER", "user"),
         ("MODERATOR", "moderator"),
         ("ADMIN", "admin"),
     )
-    username_validator = UnicodeUsernameValidator()
 
     bio = models.TextField(
         "Биография", blank=True, help_text="Здесь напишите о себе"
@@ -23,6 +20,7 @@ class User(AbstractUser):
     )
     email = models.EmailField(
         "Адрес эл. почты",
+        max_length=254,
         blank=False,
         unique=True,
         help_text="Введите адрес электронной почты",
@@ -39,7 +37,7 @@ class User(AbstractUser):
         max_length=150,
         unique=True,
         help_text="Введите имя пользователя",
-        validators=[username_validator, not_me_username_validator],
+        validators=[not_me_username_validator, username_validator],
     )
 
     def email_user(
@@ -64,3 +62,11 @@ class User(AbstractUser):
         if self.role == "ADMIN":
             self.is_superuser = True
         super().save(*args, **kwargs)
+
+    @property
+    def is_moderator(self):
+        return self.role == "MODERATOR"
+
+    @property
+    def is_admin(self):
+        return self.role == "ADMIN"
