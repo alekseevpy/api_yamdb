@@ -2,6 +2,12 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
 
+from .constants import (
+    CONF_CODE_MAX_LEN,
+    EMAIL_MAX_LEN,
+    ROLE_MAX_LEN,
+    USERNAME_MAX_LEN,
+)
 from .validators import not_me_username_validator, username_validator
 
 
@@ -15,12 +21,12 @@ class User(AbstractUser):
     bio = models.TextField(
         "Биография", blank=True, help_text="Здесь напишите о себе"
     )
-    confirmation_code = models.PositiveIntegerField(
-        "Код подтверждения", blank=True, null=True
+    confirmation_code = models.CharField(
+        "Код подтверждения", blank=True, max_length=CONF_CODE_MAX_LEN
     )
     email = models.EmailField(
         "Адрес эл. почты",
-        max_length=254,
+        max_length=EMAIL_MAX_LEN,
         blank=False,
         unique=True,
         help_text="Введите адрес электронной почты",
@@ -28,13 +34,13 @@ class User(AbstractUser):
     role = models.CharField(
         "Роль пользователя",
         choices=ROLE_CHOICES,
-        max_length=30,
+        max_length=ROLE_MAX_LEN,
         default="USER",
         help_text="Выберите роль пользователя",
     )
     username = models.CharField(
         "Username",
-        max_length=150,
+        max_length=USERNAME_MAX_LEN,
         unique=True,
         help_text="Введите имя пользователя",
         validators=[not_me_username_validator, username_validator],
