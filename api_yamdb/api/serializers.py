@@ -7,8 +7,22 @@ from users.validators import not_me_username_validator, username_validator
 User = get_user_model()
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "bio",
+            "role",
+        )
+
+
 class SignUpSerializer(serializers.Serializer):
     """Сериализатор для регистрации."""
+
     username = serializers.CharField(
         max_length=USERNAME_MAX_LEN,
         required=True,
@@ -22,6 +36,7 @@ class SignUpSerializer(serializers.Serializer):
 
 class GetAuthTokenSerializer(serializers.Serializer):
     """Сериализатор для получения токена."""
+
     username = serializers.CharField(
         max_length=USERNAME_MAX_LEN,
         required=True,

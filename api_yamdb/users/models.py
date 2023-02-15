@@ -13,9 +13,9 @@ from .validators import not_me_username_validator, username_validator
 
 class User(AbstractUser):
     ROLE_CHOICES = (
-        ("USER", "user"),
-        ("MODERATOR", "moderator"),
-        ("ADMIN", "admin"),
+        ("user", "user"),
+        ("moderator", "moderator"),
+        ("admin", "admin"),
     )
 
     bio = models.TextField(
@@ -35,7 +35,7 @@ class User(AbstractUser):
         "Роль пользователя",
         choices=ROLE_CHOICES,
         max_length=ROLE_MAX_LEN,
-        default="USER",
+        default="user",
         help_text="Выберите роль пользователя",
     )
     username = models.CharField(
@@ -63,16 +63,16 @@ class User(AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
-        if self.role == "MODERATOR":
+        if self.role == "moderator":
             self.is_staff = True
-        if self.role == "ADMIN":
+        if self.role == "admin":
             self.is_superuser = True
         super().save(*args, **kwargs)
 
     @property
     def is_moderator(self):
-        return self.role == "MODERATOR"
+        return self.role == "moderator"
 
     @property
     def is_admin(self):
-        return self.role == "ADMIN"
+        return self.role == "admin"

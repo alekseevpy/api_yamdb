@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('bio', models.TextField(blank=True, help_text='Здесь напишите о себе', verbose_name='Биография')),
                 ('confirmation_code', models.PositiveIntegerField(blank=True, null=True, verbose_name='Код подтверждения')),
                 ('email', models.EmailField(max_length=254, unique=True, verbose_name='Адрес эл. почты')),
-                ('role', models.CharField(choices=[('USER', 'user'), ('MODERATOR', 'moderator'), ('ADMIN', 'admin'), ('SUPERUSER', 'superuser')], default='USER', max_length=30, verbose_name='Роль пользователя')),
+                ('role', models.CharField(choices=[('user', 'user'), ('moderator', 'moderator'), ('admin', 'admin')], default='user', max_length=30, verbose_name='Роль пользователя')),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
             ],

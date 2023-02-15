@@ -1,19 +1,35 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import filters, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
+from .permissions import IsAdminOnly
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
-from .serializers import GetAuthTokenSerializer, SignUpSerializer
-
+from .serializers import (
+    GetAuthTokenSerializer,
+    SignUpSerializer,
+    UserSerializer,
+)
 
 User = get_user_model()
 
 
+class UserViewSet(ModelViewSet):
+    """Вьюсет модели User."""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAdminOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("username",)
+    lookup_field = "username"
+
+
 class SignUpView(APIView):
     """CBV для регистрации пользователя и получения кода на почту."""
+
     permission_classes = []
 
     def post(self, request):
@@ -34,6 +50,7 @@ class SignUpView(APIView):
 
 class GetAuthTokenView(APIView):
     """CBV для получения и обновления токена."""
+
     permission_classes = []
 
     def post(self, request):
