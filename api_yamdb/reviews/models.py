@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 from django.core.validators import MaxValueValidator
@@ -21,7 +23,7 @@ class Category(models.Model):
 
 class Genre(models.Model):
     """Модель для жанров."""
-    name = models.CharField('Наименование жанра', max_length=256)
+    name = models.CharField('Наименование жанра', max_length=150) #max_length-?
     slug = models.SlugField('Путь жанра', unique=True)
 
     class Meta:
