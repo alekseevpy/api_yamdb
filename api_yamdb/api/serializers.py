@@ -8,6 +8,8 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Сериализатор модели User."""
+
     class Meta:
         model = User
         fields = (
