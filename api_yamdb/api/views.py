@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from .permissions import IsAdminOnly
+from .permissions import IsAdminOrReadOnly
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
 from .serializers import (
@@ -26,7 +26,7 @@ class UserViewSet(ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("username",)
     lookup_field = "username"
@@ -51,14 +51,9 @@ class UserViewSet(ModelViewSet):
             serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # def update(self, request, *args, **kwargs):
-    #     return
-
 
 class SignUpView(APIView):
     """CBV для регистрации пользователя и получения кода на почту."""
-
-    permission_classes = []
 
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
@@ -89,8 +84,6 @@ class SignUpView(APIView):
 
 class GetAuthTokenView(APIView):
     """CBV для получения и обновления токена."""
-
-    permission_classes = []
 
     def post(self, request):
         serializer = GetAuthTokenSerializer(data=request.data)
