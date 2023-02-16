@@ -22,6 +22,12 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
+class UserProfileSerializer(UserSerializer):
+    """Сериализатор модели User для профиля пользователя."""
+    class Meta(UserSerializer.Meta):
+        read_only_fields = ("role",)
+
+
 class SignUpSerializer(serializers.Serializer):
     """Сериализатор для регистрации."""
 
