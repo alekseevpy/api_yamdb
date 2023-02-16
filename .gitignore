@@ -148,6 +148,10 @@ dmypy.json
 # папки со статикой и медиа
 media/
 
-#папка с отправленными письмами
+# папка с отправленными письмами
 sent_emails/
 
+# фaйлы миграций
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
