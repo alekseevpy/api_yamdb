@@ -42,7 +42,7 @@ class Command(BaseCommand):
             cursor = connection.cursor()
 
             with open(file_path, newline="", encoding="utf-8") as csv_file:
-                dict_reader = csv.DictReader(csv_file, quoting=csv.QUOTE_NONE)
+                dict_reader = csv.DictReader(csv_file)
                 to_db = [i for i in dict_reader]
 
             table_keys = to_db[0].keys()
