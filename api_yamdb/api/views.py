@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from reviews.models import Review
 
-from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAuthorModeratorAdminOrReadOnly
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
 from .serializers import (
@@ -117,7 +117,7 @@ class ReviewViewSet(ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [
-        IsOwnerOrReadOnly,
+        IsAuthorModeratorAdminOrReadOnly,
     ]
     pagination_class = LimitOffsetPagination
 
@@ -136,7 +136,7 @@ class CommentViewSet(ModelViewSet):
 
     serializer_class = CommentSerializer
     permission_classes = [
-        IsOwnerOrReadOnly,
+        IsAuthorModeratorAdminOrReadOnly,
     ]
 
     def get_queryset(self):
