@@ -8,17 +8,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from reviews.models import Category, Genre, Title
-from .permissions import IsAdminOrReadOnly
+from reviews.models import Category, Genre, Review, Title
+from .mixins import GetListCreateDeleteMixin
+from .permissions import IsAdminOrReadOnly, IsAuthorModeratorAdminOrReadOnly
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
 from .serializers import (
+    CommentSerializer,
     GetAuthTokenSerializer,
+    ReviewSerializer,
     SignUpSerializer,
     UserProfileSerializer,
     UserSerializer,
 )
-from .mixins import GetListCreateDeleteMixin
 
 User = get_user_model()
 
@@ -103,6 +105,42 @@ class GetAuthTokenView(APIView):
             )
         return Response(get_token_for_user(user), status=status.HTTP_200_OK)
 
+
+class ReviewViewSet(ModelViewSet):
+    """
+    Получить список всех отзывов.
+    Добавление нового отзыва.
+    Получение отзыва по id.
+    Обновление отзыва по id.
+    """
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = (IsAuthorModeratorAdminOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class CommentViewSet(ModelViewSet):
+    """
+    Получить список всех комментариев.
+    Добавление нового комментария к отзыву.
+    Получить комментарий по id.
+    Обновление комментария по id.
+    Удаление комментария.
+    """
+
+    serializer_class = CommentSerializer
+    permission_classes = (IsAuthorModeratorAdminOrReadOnly,)
+
+    def get_queryset(self):
+        review = get_object_or_404(Review, id=self.kwargs.get("review_id"))
+        return review.comments
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(Review, id=self.kwargs.get("review_id"))
+        serializer.save(author=self.request.user, review=review)
 
 class TitleViewSet(viewsets.ModelViewSet):
     """Вьюсет для произведения."""

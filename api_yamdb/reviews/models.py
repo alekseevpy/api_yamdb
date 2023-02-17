@@ -1,11 +1,10 @@
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from django.core.validators import MaxValueValidator
-from django.db import models
-
-# создать приложение ТИТЛс с файлами админ, приложение, модели
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -13,7 +12,7 @@ class Category(models.Model):
 
     name = models.CharField(
         "Наименование категории", max_length=150
-    )  # max_length-?
+    )
     slug = models.SlugField("Путь категории", unique=True)
 
     class Meta:
@@ -47,17 +46,16 @@ class Title(models.Model):
 
     name = models.CharField(
         "Наименование произведения", max_length=150
-    )  # max_length-?
+    )
     year = models.IntegerField(
         "Год выпуска", validators=[MaxValueValidator(int(datetime.now().year))]
     )
     description = models.TextField(
         "Описание",
     )
-    # rating?
     genre = models.ManyToManyField(
         Genre,
-        through='GenreTitle',
+        through="GenreTitle",
         blank=True,
         related_name="titles",
         verbose_name="Жанр",
@@ -96,9 +94,46 @@ class GenreTitle(models.Model):
     )
 
 
+class Review(models.Model):
+    """Модель для Отзыва+рейтинг."""
+
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="reviews"
+    )
+    title = models.ForeignKey(
+        Title, on_delete=models.CASCADE, verbose_name="Произведение"
+    )
+    text = models.TextField("Текст отзыва")
+    score = models.PositiveSmallIntegerField(
+        verbose_name="Оценка",
+        default=1,
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+    )
+    pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
+
+    def __str__(self):
+        return self.text[:30]
+
+
+class Comment(models.Model):
+    """Модель для Комментария к Отзыву."""
+
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="comments"
+    )
+    review = models.ForeignKey(
+        Review, on_delete=models.CASCADE, related_name="comments"
+    )
+    text = models.TextField("Текст комментария")
+    pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
+
+    def __str__(self):
+        return self.text[:30]
+
     class Meta:
         verbose_name = 'Произведение-жанр'
         verbose_name_plural = 'Произведения-Жанры'
 
     def __str__(self):
         return f'{self.title} {self.genre}'
+
