@@ -24,25 +24,42 @@ class Command(BaseCommand):
         csv_root: Path = settings.BASE_DIR / "static" / "data"
         files_paths = list(csv_root.glob("*.csv"))
 
-        print(self.DB_PATH)
-
         for file_path in files_paths:
-            try:
-                if file_path.name == "review.csv":
-                    self.write_to_db(file_path)
-
-            except Exception as er:
-                print("тут", er)
-
+            if file_path.name == "users.csv":
+                self.write_to_db(file_path)
+        
+        print("Соединение закрыто")
     def write_to_db(self, file_path: Path) -> None:
-        connection = sqlite3.connect(self.DB_PATH)
-        cursor = connection.cursor()
+        try:
+            connection = sqlite3.connect(self.DB_PATH)
+            cursor = connection.cursor()
 
-        with open(file_path, newline="", encoding="utf-8") as csv_file:
-            dict_reader = csv.DictReader(csv_file)
-            to_db = [i for i in dict_reader]
-        print(to_db.pop().keys())
-        # cursor.executemany(
-        #     """INSERT INTO t (col1, col2) VALUES (?, ?);""", to_db)
-        # connection.commit()
-        connection.close()
+            with open(file_path, newline="", encoding="utf-8") as csv_file:
+                dict_reader = csv.DictReader(csv_file, quoting=csv.QUOTE_NONE)
+                to_db = [i for i in dict_reader]
+
+            table_keys = to_db[0].keys()
+            values_query = self.make_values_query(table_keys)
+            current_table = self.FILE_DB_TABLE[file_path.name]
+
+            table_fields = ", ".join(table_keys)
+
+            cursor.executemany(
+                f"INSERT INTO {current_table}({table_fields}) VALUES ({values_query});",
+                to_db,
+            )
+            connection.commit()
+        except Exception as er:
+            print("Ошибка: ", er)
+        finally:
+            connection.close()
+
+    @staticmethod
+    def make_values_query(table_keys: dict.keys) -> str:
+        """Возвращает отформатированную строку.
+        Пример: ":id, :username, :bio, :first_name, :last_name".
+        """
+        result = ""
+        for key in table_keys:
+            result += f":{key}, "
+        return result[:-2]
