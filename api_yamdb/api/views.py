@@ -3,13 +3,12 @@ from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status
 from rest_framework.decorators import action
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from reviews.models import Review
 
+from reviews.models import Review
 from .permissions import IsAdminOrReadOnly, IsAuthorModeratorAdminOrReadOnly
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
@@ -116,10 +115,7 @@ class ReviewViewSet(ModelViewSet):
 
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [
-        IsAuthorModeratorAdminOrReadOnly,
-    ]
-    pagination_class = LimitOffsetPagination
+    permission_classes = (IsAuthorModeratorAdminOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -135,9 +131,7 @@ class CommentViewSet(ModelViewSet):
     """
 
     serializer_class = CommentSerializer
-    permission_classes = [
-        IsAuthorModeratorAdminOrReadOnly,
-    ]
+    permission_classes = (IsAuthorModeratorAdminOrReadOnly,)
 
     def get_queryset(self):
         review = get_object_or_404(Review, id=self.kwargs.get("review_id"))

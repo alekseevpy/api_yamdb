@@ -106,7 +106,7 @@ class Review(models.Model):
         Title, on_delete=models.CASCADE, verbose_name="Произведение"
     )
     text = models.TextField("Текст отзыва")
-    rating = models.PositiveSmallIntegerField(
+    score = models.PositiveSmallIntegerField(
         verbose_name="Оценка",
         default=1,
         validators=[MinValueValidator(1), MaxValueValidator(10)],
@@ -114,7 +114,7 @@ class Review(models.Model):
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
 
     def __str__(self):
-        return self.text
+        return self.text[:30]
 
 
 class Comment(models.Model):
@@ -130,4 +130,4 @@ class Comment(models.Model):
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
 
     def __str__(self):
-        return self.text
+        return self.text[:30]
