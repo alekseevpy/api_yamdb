@@ -3,16 +3,20 @@ from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status
 from rest_framework.decorators import action
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from reviews.models import Review
 
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
 from .serializers import (
+    CommentSerializer,
     GetAuthTokenSerializer,
+    ReviewSerializer,
     SignUpSerializer,
     UserProfileSerializer,
     UserSerializer,
@@ -100,3 +104,45 @@ class GetAuthTokenView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(get_token_for_user(user), status=status.HTTP_200_OK)
+
+
+class ReviewViewSet(ModelViewSet):
+    """
+    Получить список всех отзывов.
+    Добавление нового отзыва.
+    Получение отзыва по id.
+    Обновление отзыва по id.
+    """
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [
+        IsOwnerOrReadOnly,
+    ]
+    pagination_class = LimitOffsetPagination
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class CommentViewSet(ModelViewSet):
+    """
+    Получить список всех комментариев.
+    Добавление нового комментария к отзыву.
+    Получить комментарий по id.
+    Обновление комментария по id.
+    Удаление комментария.
+    """
+
+    serializer_class = CommentSerializer
+    permission_classes = [
+        IsOwnerOrReadOnly,
+    ]
+
+    def get_queryset(self):
+        review = get_object_or_404(Review, id=self.kwargs.get("review_id"))
+        return review.comments
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(Review, id=self.kwargs.get("review_id"))
+        serializer.save(author=self.request.user, review=review)
