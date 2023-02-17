@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     FILE_DB_TABLE: dict = {
         "category.csv": "reviews_category",
-        "comments.csv": "reviews_comments",
+        "comments.csv": "reviews_comment",
         "genre.csv": "reviews_genre",
         "genre_title.csv": "reviews_genretitle",
         "review.csv": "reviews_review",
@@ -30,7 +30,7 @@ class Command(BaseCommand):
         files_paths = list(csv_root.glob("*.csv"))
         for file_path in files_paths:
 
-            if file_path.name == "review.csv":
+            if file_path.name == "comments.csv":
 
                 self.write_to_db(file_path)
 
