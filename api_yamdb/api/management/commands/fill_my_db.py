@@ -1,12 +1,10 @@
 import csv
 import sqlite3
 from pathlib import Path
-import sys
-
-from loguru import logger
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from loguru import logger
 
 
 class Command(BaseCommand):
@@ -24,21 +22,25 @@ class Command(BaseCommand):
     DB_PATH: Path = settings.DATABASES["default"]["NAME"]
 
     def handle(self, *args, **options):
-        logger.debug("Starting...")
-
+        logger.info("Starting...")
         csv_root: Path = settings.BASE_DIR / "static" / "data"
         files_paths = list(csv_root.glob("*.csv"))
         for file_path in files_paths:
-
-            if file_path.name == "comments.csv":
-
-                self.write_to_db(file_path)
-
-        logger.debug("Finished!")
+            self.write_to_db(file_path)
+        logger.info("Finished!")
 
     def write_to_db(self, file_path: Path) -> None:
+        """Основная функция команды "manage.py fill_my_db".
+        1) Принимает путь к файлу .csv
+        2) Устанавливает соединение с БД
+        3) Открывает файл и создает список с данными для записи в
+        соответствующую файлу таблицу и записывает данные в БД
+        4) Закрывает соединение с БД
+        5) Логирует события levels: info & critical
+        """
+        first_el: int = 0
         try:
-            logger.debug(f"Starting import from {file_path.name}")
+            logger.info(f"Starting import data from {file_path.name}")
 
             connection = sqlite3.connect(self.DB_PATH)
             cursor = connection.cursor()
@@ -47,18 +49,20 @@ class Command(BaseCommand):
                 dict_reader = csv.DictReader(csv_file)
                 to_db = [i for i in dict_reader]
 
-            table_keys = to_db[0].keys()
+            table_keys = to_db[first_el].keys()
             values_query = self.make_values_query(table_keys)
             current_table = self.FILE_DB_TABLE[file_path.name]
-
             table_fields = ", ".join(table_keys)
 
             cursor.executemany(
-                f"INSERT INTO {current_table}({table_fields}) VALUES ({values_query});",
+                (
+                    f"INSERT INTO {current_table}({table_fields}) "
+                    f"VALUES ({values_query});"
+                ),
                 to_db,
             )
             connection.commit()
-            logger.debug(f"Finished import from {file_path.name}")
+            logger.info(f"Finished import data from {file_path.name}")
         except Exception as er:
             logger.critical(f"Error: {er}")
         finally:
@@ -69,7 +73,8 @@ class Command(BaseCommand):
         """Возвращает отформатированную строку.
         Пример: ":id, :username, :bio, :first_name, :last_name".
         """
+        last_two: int = -2
         result = ""
         for key in table_keys:
             result += f":{key}, "
-        return result[:-2]
+        return result[:last_two]
