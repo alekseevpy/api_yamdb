@@ -1,13 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, status
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from reviews.models import Category, Genre, Title
 from .permissions import IsAdminOrReadOnly
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
@@ -17,6 +18,7 @@ from .serializers import (
     UserProfileSerializer,
     UserSerializer,
 )
+from .mixins import GetListCreateDeleteMixin
 
 User = get_user_model()
 
@@ -100,3 +102,34 @@ class GetAuthTokenView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return Response(get_token_for_user(user), status=status.HTTP_200_OK)
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    """Вьюсет для произведения."""
+    queryset = Title.objects.all()
+    # serializer_class = TitleSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+
+    def get_serializer_class(self):
+        pass
+        # if self.request.method in ('POST', 'PATCH',):
+        #     return TitleSerializer
+        # return TitleGetSerializer
+
+
+class CategoryViewSet(GetListCreateDeleteMixin):
+    """Вьюсет для категории."""
+    queryset = Category.objects.all()
+    # serializer_class = CategorySerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+    search_fields = ('name', 'slug',)
+    lookup_field = 'slug'
+
+
+class GenreViewSet(GetListCreateDeleteMixin):
+    """Вьюсет для жанра."""
+    queryset = Genre.objects.all()
+    #serializer_class = GenreSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
+    search_fields = ('name', 'slug')
+    lookup_field = 'slug'

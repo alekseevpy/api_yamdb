@@ -94,3 +94,11 @@ class GenreTitle(models.Model):
         related_name="titles",
         verbose_name="Произведения",
     )
+
+
+    class Meta:
+        verbose_name = 'Произведение-жанр'
+        verbose_name_plural = 'Произведения-Жанры'
+
+    def __str__(self):
+        return f'{self.title} {self.genre}'
