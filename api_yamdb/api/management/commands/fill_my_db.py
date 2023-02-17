@@ -29,7 +29,9 @@ class Command(BaseCommand):
         csv_root: Path = settings.BASE_DIR / "static" / "data"
         files_paths = list(csv_root.glob("*.csv"))
         for file_path in files_paths:
-            if file_path.name == "titles.csv":
+
+            if file_path.name == "category.csv":
+
                 self.write_to_db(file_path)
 
         logger.debug("Finished!")
@@ -37,7 +39,7 @@ class Command(BaseCommand):
     def write_to_db(self, file_path: Path) -> None:
         try:
             logger.debug(f"Starting import from {file_path.name}")
-            
+
             connection = sqlite3.connect(self.DB_PATH)
             cursor = connection.cursor()
 
