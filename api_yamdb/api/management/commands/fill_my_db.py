@@ -1,6 +1,9 @@
 import csv
 import sqlite3
 from pathlib import Path
+import sys
+
+from loguru import logger
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -15,22 +18,26 @@ class Command(BaseCommand):
         "genre.csv": "reviews_genre",
         "genre_title.csv": "reviews_genretitle",
         "review.csv": "reviews_review",
-        "titles.csv": "reviews_titles",
+        "titles.csv": "reviews_title",
         "users.csv": "users_user",
     }
     DB_PATH: Path = settings.DATABASES["default"]["NAME"]
 
     def handle(self, *args, **options):
+        logger.debug("Starting...")
+
         csv_root: Path = settings.BASE_DIR / "static" / "data"
         files_paths = list(csv_root.glob("*.csv"))
-
         for file_path in files_paths:
-            if file_path.name == "users.csv":
+            if file_path.name == "titles.csv":
                 self.write_to_db(file_path)
-        
-        print("Соединение закрыто")
+
+        logger.debug("Finished!")
+
     def write_to_db(self, file_path: Path) -> None:
         try:
+            logger.debug(f"Starting import from {file_path.name}")
+            
             connection = sqlite3.connect(self.DB_PATH)
             cursor = connection.cursor()
 
@@ -49,8 +56,9 @@ class Command(BaseCommand):
                 to_db,
             )
             connection.commit()
+            logger.debug(f"Finished import from {file_path.name}")
         except Exception as er:
-            print("Ошибка: ", er)
+            logger.critical(f"Error: {er}")
         finally:
             connection.close()
 
