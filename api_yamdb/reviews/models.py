@@ -80,14 +80,14 @@ class Title(models.Model):
 
 
 class GenreTitle(models.Model):
-    genre_id = models.ForeignKey(
+    genre = models.ForeignKey(
         Genre,
         null=True,
         on_delete=models.SET_NULL,
         related_name="genres",
         verbose_name="Жанры",
     )
-    title_id = models.ForeignKey(
+    title = models.ForeignKey(
         Title,
         on_delete=models.SET_NULL,
         null=True,
