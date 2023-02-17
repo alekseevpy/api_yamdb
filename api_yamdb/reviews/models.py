@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-# создать приложение ТИТЛс с файлами админ, приложение, модели
 User = get_user_model()
 
 
@@ -13,7 +12,7 @@ class Category(models.Model):
 
     name = models.CharField(
         "Наименование категории", max_length=150
-    )  # max_length-?
+    )
     slug = models.SlugField("Путь категории", unique=True)
 
     class Meta:
@@ -47,14 +46,13 @@ class Title(models.Model):
 
     name = models.CharField(
         "Наименование произведения", max_length=150
-    )  # max_length-?
+    )
     year = models.IntegerField(
         "Год выпуска", validators=[MaxValueValidator(int(datetime.now().year))]
     )
     description = models.TextField(
         "Описание",
     )
-    # rating?
     genre = models.ManyToManyField(
         Genre,
         through="GenreTitle",
@@ -80,14 +78,14 @@ class Title(models.Model):
 
 
 class GenreTitle(models.Model):
-    genre_id = models.ForeignKey(
+    genre = models.ForeignKey(
         Genre,
         null=True,
         on_delete=models.SET_NULL,
         related_name="genres",
         verbose_name="Жанры",
     )
-    title_id = models.ForeignKey(
+    title = models.ForeignKey(
         Title,
         on_delete=models.SET_NULL,
         null=True,
@@ -131,3 +129,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text[:30]
+
+    class Meta:
+        verbose_name = 'Произведение-жанр'
+        verbose_name_plural = 'Произведения-Жанры'
+
+    def __str__(self):
+        return f'{self.title} {self.genre}'
+
