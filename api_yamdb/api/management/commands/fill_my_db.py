@@ -30,7 +30,7 @@ class Command(BaseCommand):
         files_paths = list(csv_root.glob("*.csv"))
         for file_path in files_paths:
 
-            if file_path.name == "genre_title.csv":
+            if file_path.name == "review.csv":
 
                 self.write_to_db(file_path)
 
