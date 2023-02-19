@@ -1,6 +1,5 @@
 <h2 align="center">API YAMDB</h2>
 
----
 
 ## О проекте
 
