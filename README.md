@@ -28,32 +28,29 @@
 
 ## Технологии
 
-<img align="right" alt="GIF" src="https://raw.githubusercontent.com/kirill-nasonkin/api_yamdb/develop/api_yamdb/static/images/f82e66a1b3be602ba90a3b3a3c31b561.gif" width="450" height="290" />
-
 ### Back-end
 
-- ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-- ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
-- ![Django Rest Framework](https://img.shields.io/badge/DRF-red?style=flat-square&logo=Django)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
+
+![Django Rest Framework](https://img.shields.io/badge/DRF-red?style=flat-square&logo=Django)
 
 ### Database
 
-- ![sqlite3](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
+![sqlite3](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
 
 ### Tools
 
-- ![vscode](https://img.shields.io/badge/PyCharm-000000.svg?&style=for-the-badge&logo=PyCharm&logoColor=white)
+![vscode](https://img.shields.io/badge/PyCharm-000000.svg?&style=for-the-badge&logo=PyCharm&logoColor=white)
+![vscode](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
 
-- ![vscode](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
-- ![Postman](https://img.shields.io/badge/Postman-FCA121?style=flat-square&logo=postman)
+![Postman](https://img.shields.io/badge/Postman-FCA121?style=flat-square&logo=postman)
 ![Git](https://img.shields.io/badge/-Git-black?style=flat-square&logo=git)
 ![GitHub](https://img.shields.io/badge/-GitHub-181717?style=flat-square&logo=github)
 
 ### Colaboration
 
-- ![PR_closed](https://img.shields.io/github/issues-pr-closed/kirill-nasonkin/api_yamdb.svg)
-
----
+![PR_closed](https://img.shields.io/github/issues-pr-closed/kirill-nasonkin/api_yamdb.svg)
 
 ## Как запустить проект
 
