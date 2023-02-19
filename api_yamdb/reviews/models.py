@@ -10,9 +10,7 @@ User = get_user_model()
 class Category(models.Model):
     """Модель для категорий."""
 
-    name = models.CharField(
-        "Наименование категории", max_length=150
-    )
+    name = models.CharField("Наименование категории", max_length=150)
     slug = models.SlugField("Путь категории", unique=True)
 
     class Meta:
@@ -44,9 +42,7 @@ class Genre(models.Model):
 class Title(models.Model):
     """Модель для произведений."""
 
-    name = models.CharField(
-        "Наименование произведения", max_length=150
-    )
+    name = models.CharField("Наименование произведения", max_length=150)
     year = models.IntegerField(
         "Год выпуска", validators=[MaxValueValidator(int(datetime.now().year))]
     )
@@ -93,6 +89,13 @@ class GenreTitle(models.Model):
         verbose_name="Произведения",
     )
 
+    class Meta:
+        verbose_name = "Произведение-жанр"
+        verbose_name_plural = "Произведения-Жанры"
+
+    def __str__(self):
+        return f"{self.title} {self.genre}"
+
 
 class Review(models.Model):
     """Модель для Отзыва+рейтинг."""
@@ -101,7 +104,10 @@ class Review(models.Model):
         User, on_delete=models.CASCADE, related_name="reviews"
     )
     title = models.ForeignKey(
-        Title, on_delete=models.CASCADE, verbose_name="Произведение"
+        Title,
+        on_delete=models.CASCADE,
+        verbose_name="Произведение",
+        related_name="reviews",
     )
     text = models.TextField("Текст отзыва")
     score = models.PositiveSmallIntegerField(
@@ -129,11 +135,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text[:30]
-
-    class Meta:
-        verbose_name = 'Произведение-жанр'
-        verbose_name_plural = 'Произведения-Жанры'
-
-    def __str__(self):
-        return f'{self.title} {self.genre}'
-
