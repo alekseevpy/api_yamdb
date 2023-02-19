@@ -89,6 +89,13 @@ class GenreTitle(models.Model):
         verbose_name="Произведения",
     )
 
+    class Meta:
+        verbose_name = "Произведение-жанр"
+        verbose_name_plural = "Произведения-Жанры"
+
+    def __str__(self):
+        return f"{self.title} {self.genre}"
+
 
 class Review(models.Model):
     """Модель для Отзыва+рейтинг."""
@@ -128,10 +135,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text[:30]
-
-    class Meta:
-        verbose_name = "Произведение-жанр"
-        verbose_name_plural = "Произведения-Жанры"
-
-    def __str__(self):
-        return f"{self.title} {self.genre}"
