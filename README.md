@@ -29,7 +29,7 @@
 
 ## Технологии
 
-<img align="right" alt="GIF" src="api_yamdb\static\images\f82e66a1b3be602ba90a3b3a3c31b561.gif" width="550" height="390" />
+<img align="right" alt="GIF" src=".\api_yamdb\static\images\f82e66a1b3be602ba90a3b3a3c31b561.gif" width="550" height="390" />
 
 ### Back-end
 
