@@ -97,7 +97,10 @@ class Review(models.Model):
         User, on_delete=models.CASCADE, related_name="reviews"
     )
     title = models.ForeignKey(
-        Title, on_delete=models.CASCADE, related_name="reviews"
+        Title,
+        on_delete=models.CASCADE,
+        verbose_name="Произведение",
+        related_name="reviews",
     )
     text = models.TextField("Текст отзыва")
     score = models.PositiveSmallIntegerField(
@@ -127,8 +130,8 @@ class Comment(models.Model):
         return self.text[:30]
 
     class Meta:
-        verbose_name = 'Произведение-жанр'
-        verbose_name_plural = 'Произведения-Жанры'
+        verbose_name = "Произведение-жанр"
+        verbose_name_plural = "Произведения-Жанры"
 
     def __str__(self):
-        return f'{self.title} {self.genre}'
+        return f"{self.title} {self.genre}"
