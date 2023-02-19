@@ -114,12 +114,17 @@ class ReviewViewSet(ModelViewSet):
     Обновление отзыва по id.
     """
 
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthorModeratorAdminOrReadOnly,)
+    http_method_names = ("get", "post", "delete", "patch")
+
+    def get_queryset(self):
+        title = get_object_or_404(Title, id=self.kwargs.get("title_id"))
+        return title.reviews.all()
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        title = get_object_or_404(Title, id=self.kwargs.get("title_id"))
+        serializer.save(author=self.request.user, title=title)
 
 
 class CommentViewSet(ModelViewSet):
@@ -133,20 +138,25 @@ class CommentViewSet(ModelViewSet):
 
     serializer_class = CommentSerializer
     permission_classes = (IsAuthorModeratorAdminOrReadOnly,)
+    http_method_names = ("get", "post", "delete", "patch")
 
     def get_queryset(self):
         review = get_object_or_404(Review, id=self.kwargs.get("review_id"))
-        return review.comments
+        return review.comments.all()
 
     def perform_create(self, serializer):
         review = get_object_or_404(Review, id=self.kwargs.get("review_id"))
         serializer.save(author=self.request.user, review=review)
 
+
 class TitleViewSet(viewsets.ModelViewSet):
     """Вьюсет для произведения."""
+
     queryset = Title.objects.all()
     # serializer_class = TitleSerializer
-    permission_classes = [IsAdminOrReadOnly, ]
+    permission_classes = [
+        IsAdminOrReadOnly,
+    ]
 
     def get_serializer_class(self):
         pass
@@ -157,17 +167,26 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 class CategoryViewSet(GetListCreateDeleteMixin):
     """Вьюсет для категории."""
+
     queryset = Category.objects.all()
     # serializer_class = CategorySerializer
-    permission_classes = [IsAdminOrReadOnly, ]
-    search_fields = ('name', 'slug',)
-    lookup_field = 'slug'
+    permission_classes = [
+        IsAdminOrReadOnly,
+    ]
+    search_fields = (
+        "name",
+        "slug",
+    )
+    lookup_field = "slug"
 
 
 class GenreViewSet(GetListCreateDeleteMixin):
     """Вьюсет для жанра."""
+
     queryset = Genre.objects.all()
-    #serializer_class = GenreSerializer
-    permission_classes = [IsAdminOrReadOnly, ]
-    search_fields = ('name', 'slug')
-    lookup_field = 'slug'
+    # serializer_class = GenreSerializer
+    permission_classes = [
+        IsAdminOrReadOnly,
+    ]
+    search_fields = ("name", "slug")
+    lookup_field = "slug"
