@@ -28,7 +28,7 @@
 
 ## Технологии
 
-<img align="right" alt="GIF" src="./api_yamdb/static/images/coder.gif" width="450" height="290" />
+<img align="right" alt="GIF" src="https://raw.githubusercontent.com/kirill-nasonkin/api_yamdb/develop/api_yamdb/static/images/f82e66a1b3be602ba90a3b3a3c31b561.gif" width="450" height="290" />
 
 ### Back-end
 
