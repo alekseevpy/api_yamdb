@@ -27,7 +27,7 @@
 - 👋 [Ростислав Рыманов](https://github.com/RostIiIslav)
 
 ## Технологии
-<img align="right" alt="GIF" src="https://image.pngaaa.com/115/1728115-middle.png" width="350" height="250" />
+<img align="right" alt="GIF" src="https://oskolnews.ru/wp-content/uploads/2021/06/29.jpg" width="420" height="320" />
 
 ### Back-end
 
