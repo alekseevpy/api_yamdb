@@ -20,16 +20,16 @@ from .permissions import (
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
 from .serializers import (
+    CategorySerializer,
     CommentSerializer,
+    GenreSerializer,
     GetAuthTokenSerializer,
     ReviewSerializer,
     SignUpSerializer,
-    UserProfileSerializer,
-    UserSerializer,
-    CategorySerializer,
-    GenreSerializer,
     TitleRetrieveSerializer,
     TitleWriteSerializer,
+    UserProfileSerializer,
+    UserSerializer,
 )
 
 User = get_user_model()
@@ -137,6 +137,19 @@ class ReviewViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, title=self.get_title())
 
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            return Response(
+                {
+                    "error": (
+                        "Вы можете оставить лишь 1 отзыв на произведение!"
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
 
 class CommentViewSet(ModelViewSet):
     """
@@ -163,12 +176,12 @@ class CommentViewSet(ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     """Вьюсет для произведения."""
+
     queryset = Title.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
     http_method_names = ("get", "post", "delete", "patch")
-
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
