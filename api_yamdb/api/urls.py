@@ -24,9 +24,10 @@ v1_router.register(
     CommentViewSet,
     basename="comments",
 )
-v1_router.register(r'titles', TitleViewSet, basename='titles')
-v1_router.register(r'genres', GenreViewSet, basename='genres')
-v1_router.register(r'categories', CategoryViewSet, basename='categories')
+
+v1_router.register(r"titles", TitleViewSet, basename="titles")
+v1_router.register(r"genres", GenreViewSet, basename="genres")
+v1_router.register(r"categories", CategoryViewSet, basename="categories")
 
 urlpatterns = [
     path("v1/auth/signup/", SignUpView.as_view(), name="sign_up"),
