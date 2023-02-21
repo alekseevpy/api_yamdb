@@ -12,22 +12,9 @@ class UserAdmin(admin.ModelAdmin):
         "email",
         "role",
     )
-    list_display_links = (
-        "pk",
-        "username",
-        "email",
-    )
-    search_fields = (
-        "username",
-        "email",
-        "first_name",
-        "last_name",
-    )
-    list_editable = (
-        "role",
-        "first_name",
-        "last_name",
-    )
+    list_display_links = ("pk", "username", "email")
+    search_fields = ("username", "email", "first_name", "last_name")
+    list_editable = ("role", "first_name", "last_name")
     list_filter = ("role",)
 
     empty_value_display = "-пусто-"
