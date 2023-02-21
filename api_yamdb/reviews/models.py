@@ -10,11 +10,10 @@ User = get_user_model()
 class Category(models.Model):
     """Модель для категорий."""
 
-    name = models.CharField("Наименование категории", max_length=150)
-    slug = models.SlugField("Путь категории", unique=True)
+    name = models.CharField("Наименование категории", max_length=256)
+    slug = models.SlugField("Путь категории", max_length=50, unique=True)
 
     class Meta:
-        ordering = ("slug",)
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
@@ -25,13 +24,10 @@ class Category(models.Model):
 class Genre(models.Model):
     """Модель для жанров."""
 
-    name = models.CharField(
-        "Наименование жанра", max_length=150
-    )  # max_length-?
-    slug = models.SlugField("Путь жанра", unique=True)
+    name = models.CharField("Наименование жанра", max_length=256)
+    slug = models.SlugField("Путь жанра", max_length=50, unique=True)
 
     class Meta:
-        ordering = ("slug",)
         verbose_name = "Жанр"
         verbose_name_plural = "Жанры"
 
@@ -42,22 +38,22 @@ class Genre(models.Model):
 class Title(models.Model):
     """Модель для произведений."""
 
-    name = models.CharField("Наименование произведения", max_length=150)
+    name = models.CharField("Наименование произведения", max_length=256)
     year = models.IntegerField(
-        "Год выпуска", blank=True, validators=[MaxValueValidator(int(datetime.now().year))]
+        "Год выпуска",
+        blank=True,
+        validators=[MaxValueValidator(int(datetime.now().year))],
     )
-    description = models.TextField(
-        "Описание", blank=True
-    )
+    description = models.TextField("Описание", blank=True)
     genre = models.ManyToManyField(
         Genre,
         through="GenreTitle",
-        blank=True,
         related_name="titles",
         verbose_name="Жанр",
     )
     category = models.ForeignKey(
         Category,
+        blank=True,
         null=True,
         on_delete=models.SET_NULL,
         related_name="titles",
@@ -65,7 +61,6 @@ class Title(models.Model):
     )
 
     class Meta:
-        ordering = ("year",)
         verbose_name = "Произведение"
         verbose_name_plural = "Произведения"
 
