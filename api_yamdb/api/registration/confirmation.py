@@ -1,4 +1,3 @@
-from datetime import datetime as dt
 from random import randint
 
 from django.contrib.auth import get_user_model

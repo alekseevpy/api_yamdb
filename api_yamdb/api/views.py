@@ -83,7 +83,7 @@ class SignUpView(APIView):
                 return Response(
                     serializer.validated_data, status=status.HTTP_200_OK
                 )
-            except IntegrityError as er:
+            except IntegrityError:
                 return Response(
                     {
                         "error": (
