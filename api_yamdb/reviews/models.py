@@ -49,7 +49,6 @@ class Title(models.Model):
     description = models.TextField("Описание", blank=True)
     genre = models.ManyToManyField(
         Genre,
-        through="GenreTitle",
         related_name="titles",
         verbose_name="Жанр",
     )
@@ -69,32 +68,6 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class GenreTitle(models.Model):
-    """Модель для связи M2M Genre Title."""
-
-    genre = models.ForeignKey(
-        Genre,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="genres",
-        verbose_name="Жанры",
-    )
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="titles",
-        verbose_name="Произведения",
-    )
-
-    class Meta:
-        verbose_name = "Произведение-жанр"
-        verbose_name_plural = "Произведения-Жанры"
-
-    def __str__(self):
-        return f"{self.title} {self.genre}"
 
 
 class Review(models.Model):
@@ -121,6 +94,12 @@ class Review(models.Model):
         verbose_name = "Ревью"
         verbose_name_plural = "Ревью"
         ordering = ("id",)
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_review",
+                fields=["author", "title"],
+            ),
+        ]
 
     def __str__(self):
         return self.text[:30]

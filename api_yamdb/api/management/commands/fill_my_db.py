@@ -14,7 +14,7 @@ class Command(BaseCommand):
         "category.csv": "reviews_category",
         "comments.csv": "reviews_comment",
         "genre.csv": "reviews_genre",
-        "genre_title.csv": "reviews_genretitle",
+        "genre_title.csv": "reviews_title_genre",
         "review.csv": "reviews_review",
         "titles.csv": "reviews_title",
         "users.csv": "users_user",

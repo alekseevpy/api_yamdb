@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db.models import Avg
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
@@ -98,7 +100,7 @@ class TitleRetrieveSerializer(serializers.ModelSerializer):
 
     def get_rating(self, obj):
         obj = obj.reviews.all().aggregate(rating=Avg("score"))
-        return round(obj["rating"], 2)
+        return obj["rating"]
 
 
 class TitleWriteSerializer(serializers.ModelSerializer):
@@ -120,8 +122,22 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(slug_field="username", read_only=True)
 
     class Meta:
-        fields = ("id", "author", "text", "score", "pub_date")
+        fields = ("id", "text", "author", "score", "pub_date")
         model = Review
+
+    def validate(self, data):
+        request = self.context["request"]
+        author = request.user
+        title_id = self.context.get("view").kwargs.get("title_id")
+        title = get_object_or_404(Title, pk=title_id)
+        if (
+            request.method == "POST"
+            and Review.objects.filter(title=title, author=author).exists()
+        ):
+            raise ValidationError(
+                "Вы можете оставить лишь 1 отзыв на произведение!"
+            )
+        return data
 
 
 class CommentSerializer(serializers.ModelSerializer):

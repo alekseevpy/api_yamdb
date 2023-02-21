@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from reviews.models import Category, Genre, Review, Title
+from .filters import TitleFilter
 from .mixins import GetListCreateDeleteMixin
 from .permissions import (
     IsAdmin,
@@ -162,13 +163,12 @@ class CommentViewSet(ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     """Вьюсет для произведения."""
-
     queryset = Title.objects.all()
-    serializer_class = TitleWriteSerializer
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ("category__slug", "genre__slug", "name", "year")
+    filterset_class = TitleFilter
     http_method_names = ("get", "post", "delete", "patch")
+
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
