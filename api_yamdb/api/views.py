@@ -179,6 +179,7 @@ class CategoryViewSet(GetListCreateDeleteMixin):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
     lookup_field = "slug"
 
@@ -189,5 +190,6 @@ class GenreViewSet(GetListCreateDeleteMixin):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    search_fields = ("name", "slug")
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("name",)
     lookup_field = "slug"
