@@ -120,7 +120,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(slug_field="username", read_only=True)
 
     class Meta:
-        fields = ("id", "author", "title", "text", "score", "pub_date")
+        fields = ("id", "author", "text", "score", "pub_date")
         model = Review
 
 
