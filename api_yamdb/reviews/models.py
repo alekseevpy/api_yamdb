@@ -69,6 +69,7 @@ class Title(models.Model):
 
 
 class GenreTitle(models.Model):
+    """Модель для связи M2M Genre Title."""
     genre = models.ForeignKey(
         Genre,
         null=True,
