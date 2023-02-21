@@ -16,6 +16,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
+        ordering = ("slug",)
 
     def __str__(self):
         return self.slug
@@ -30,6 +31,7 @@ class Genre(models.Model):
     class Meta:
         verbose_name = "Жанр"
         verbose_name_plural = "Жанры"
+        ordering = ("id",)
 
     def __str__(self):
         return self.slug
@@ -63,6 +65,7 @@ class Title(models.Model):
     class Meta:
         verbose_name = "Произведение"
         verbose_name_plural = "Произведения"
+        ordering = ("id",)
 
     def __str__(self):
         return self.name
@@ -70,6 +73,7 @@ class Title(models.Model):
 
 class GenreTitle(models.Model):
     """Модель для связи M2M Genre Title."""
+
     genre = models.ForeignKey(
         Genre,
         null=True,
@@ -113,6 +117,11 @@ class Review(models.Model):
     )
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Ревью"
+        verbose_name_plural = "Ревью"
+        ordering = ("id",)
+
     def __str__(self):
         return self.text[:30]
 
@@ -128,6 +137,11 @@ class Comment(models.Model):
     )
     text = models.TextField("Текст комментария")
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
+        ordering = ("id",)
 
     def __str__(self):
         return self.text[:30]
