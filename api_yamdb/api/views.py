@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -163,12 +164,12 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleWriteSerializer
     permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ("category__slug", "genre__slug", "name", "year")
+    http_method_names = ("get", "post", "delete", "patch")
 
     def get_serializer_class(self):
-        if self.request.method in (
-            "POST",
-            "PATCH",
-        ):
+        if self.action in ["list", "retrieve"]:
             return TitleRetrieveSerializer
         return TitleWriteSerializer
 
