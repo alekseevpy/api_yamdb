@@ -10,7 +10,11 @@ from rest_framework.viewsets import ModelViewSet
 
 from reviews.models import Category, Genre, Review, Title
 from .mixins import GetListCreateDeleteMixin
-from .permissions import IsAdminOrReadOnly, IsAuthorModeratorAdminOrReadOnly
+from .permissions import (
+    IsAdmin,
+    IsAdminOrReadOnly,
+    IsAuthorModeratorAdminOrReadOnly,
+)
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
 from .serializers import (
@@ -34,7 +38,7 @@ class UserViewSet(ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdmin,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("username",)
     lookup_field = "username"
@@ -161,7 +165,10 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
 
     def get_serializer_class(self):
-        if self.request.method in ('POST', 'PATCH',):
+        if self.request.method in (
+            "POST",
+            "PATCH",
+        ):
             return TitleRetrieveSerializer
         return TitleWriteSerializer
 
@@ -172,10 +179,7 @@ class CategoryViewSet(GetListCreateDeleteMixin):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
-    search_fields = (
-        "name",
-        "slug",
-    )
+    search_fields = ("name",)
     lookup_field = "slug"
 
 
