@@ -20,6 +20,10 @@ from .serializers import (
     SignUpSerializer,
     UserProfileSerializer,
     UserSerializer,
+    CategorySerializer,
+    GenreSerializer,
+    TitleSerializer,
+    TitleWriteSerializer,
 )
 
 User = get_user_model()
@@ -153,26 +157,21 @@ class TitleViewSet(viewsets.ModelViewSet):
     """Вьюсет для произведения."""
 
     queryset = Title.objects.all()
-    # serializer_class = TitleSerializer
-    permission_classes = [
-        IsAdminOrReadOnly,
-    ]
+    serializer_class = TitleWriteSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
     def get_serializer_class(self):
-        pass
-        # if self.request.method in ('POST', 'PATCH',):
-        #     return TitleSerializer
-        # return TitleGetSerializer
+        if self.request.method in ('POST', 'PATCH',):
+            return TitleSerializer
+        return TitleWriteSerializer
 
 
 class CategoryViewSet(GetListCreateDeleteMixin):
     """Вьюсет для категории."""
 
     queryset = Category.objects.all()
-    # serializer_class = CategorySerializer
-    permission_classes = [
-        IsAdminOrReadOnly,
-    ]
+    serializer_class = CategorySerializer
+    permission_classes = (IsAdminOrReadOnly,)
     search_fields = (
         "name",
         "slug",
@@ -184,9 +183,7 @@ class GenreViewSet(GetListCreateDeleteMixin):
     """Вьюсет для жанра."""
 
     queryset = Genre.objects.all()
-    # serializer_class = GenreSerializer
-    permission_classes = [
-        IsAdminOrReadOnly,
-    ]
+    serializer_class = GenreSerializer
+    permission_classes = (IsAdminOrReadOnly,)
     search_fields = ("name", "slug")
     lookup_field = "slug"
