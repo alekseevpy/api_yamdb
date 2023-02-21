@@ -22,7 +22,7 @@ from .serializers import (
     UserSerializer,
     CategorySerializer,
     GenreSerializer,
-    TitleSerializer,
+    TitleRetrieveSerializer,
     TitleWriteSerializer,
 )
 
@@ -162,7 +162,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PATCH',):
-            return TitleSerializer
+            return TitleRetrieveSerializer
         return TitleWriteSerializer
 
 
