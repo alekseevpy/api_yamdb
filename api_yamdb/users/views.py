@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status
 from rest_framework.decorators import action
@@ -33,11 +32,9 @@ class UserViewSet(ModelViewSet):
     @action(
         detail=False,
         methods=["get", "patch"],
-        url_path="me",
-        url_name="user_profile",
         permission_classes=(IsAuthenticated,),
     )
-    def get_patch_self_profile(self, request):
+    def me(self, request):
         serializer = UserProfileSerializer(
             request.user, partial=True, data=request.data
         )
@@ -58,25 +55,14 @@ class SignUpView(APIView):
         if serializer.is_valid():
             username = serializer.validated_data.get("username")
             email = serializer.validated_data.get("email")
-            try:
-                user, _ = User.objects.get_or_create(
-                    username=username, email=email
-                )
-                user.confirmation_code = send_confirmation_code(user)
-                user.save()
-                return Response(
-                    serializer.validated_data, status=status.HTTP_200_OK
-                )
-            except IntegrityError:
-                return Response(
-                    {
-                        "error": (
-                            "Данное имя пользователя или email "
-                            "уже используются"
-                        )
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+            user, _ = User.objects.get_or_create(
+                username=username, email=email
+            )
+            user.confirmation_code = send_confirmation_code(user)
+            user.save()
+            return Response(
+                serializer.validated_data, status=status.HTTP_200_OK
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

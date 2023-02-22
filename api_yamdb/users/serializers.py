@@ -42,6 +42,17 @@ class SignUpSerializer(serializers.Serializer):
         required=True,
     )
 
+    def validate(self, data):
+        if self.context['request'].method == 'POST':
+            username = self.context.get('view').kwargs.get('username')
+            email = self.context.get('view').kwargs.get('email')
+            if User.objects.filter(username=username, email=email).exists():
+                raise serializers.ValidationError(
+                    "Данное имя пользователя или email "
+                    "уже используются"
+                )
+        return data
+
 
 class GetAuthTokenSerializer(serializers.Serializer):
     """Сериализатор для получения токена."""
