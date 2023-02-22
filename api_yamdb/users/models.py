@@ -4,19 +4,19 @@ from django.db import models
 from django.db.models import CharField
 
 from .constants import (
-    CONF_CODE_MAX_LEN,
+    ADMIN, CONF_CODE_MAX_LEN,
     EMAIL_MAX_LEN,
-    ROLE_MAX_LEN,
-    USERNAME_MAX_LEN,
+    MODERATOR, ROLE_MAX_LEN,
+    USER, USERNAME_MAX_LEN,
 )
 from .validators import not_me_username_validator, username_validator
 
 
 class User(AbstractUser):
     ROLE_CHOICES = (
-        ("user", "user"),
-        ("moderator", "moderator"),
-        ("admin", "admin"),
+        (USER, "user"),
+        (MODERATOR, "moderator"),
+        (ADMIN, "admin"),
     )
 
     bio = models.TextField(
@@ -48,11 +48,11 @@ class User(AbstractUser):
     )
 
     def email_user(
-        self,
-        message,
-        subject="Регистрация",
-        from_email="yamdb@gmail.com",
-        **kwargs
+            self,
+            message,
+            subject="Регистрация",
+            from_email="yamdb@gmail.com",
+            **kwargs
     ):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
@@ -65,16 +65,16 @@ class User(AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
-        if self.role == "moderator":
+        if self.role == MODERATOR:
             self.is_staff = True
-        if self.role == "admin":
+        if self.role == ADMIN:
             self.is_superuser = True
         super().save(*args, **kwargs)
 
     @property
     def is_moderator(self):
-        return self.role == "moderator"
+        return self.role == MODERATOR
 
     @property
     def is_admin(self):
-        return self.role == "admin"
+        return self.role == ADMIN
