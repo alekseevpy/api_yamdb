@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status
 from rest_framework.decorators import action
@@ -11,8 +12,10 @@ from core.permissions import IsAdmin
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
 from .serializers import (
-    GetAuthTokenSerializer, SignUpSerializer,
-    UserProfileSerializer, UserSerializer
+    GetAuthTokenSerializer,
+    SignUpSerializer,
+    UserProfileSerializer,
+    UserSerializer,
 )
 
 User = get_user_model()
@@ -55,14 +58,25 @@ class SignUpView(APIView):
         if serializer.is_valid():
             username = serializer.validated_data.get("username")
             email = serializer.validated_data.get("email")
-            user, _ = User.objects.get_or_create(
-                username=username, email=email
-            )
-            user.confirmation_code = send_confirmation_code(user)
-            user.save()
-            return Response(
-                serializer.validated_data, status=status.HTTP_200_OK
-            )
+            try:
+                user, _ = User.objects.get_or_create(
+                    username=username, email=email
+                )
+                user.confirmation_code = send_confirmation_code(user)
+                user.save()
+                return Response(
+                    serializer.validated_data, status=status.HTTP_200_OK
+                )
+            except IntegrityError:
+                return Response(
+                    {
+                        "error": (
+                            "Данное имя пользователя или email "
+                            "уже используются"
+                        )
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
