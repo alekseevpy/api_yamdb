@@ -4,10 +4,13 @@ from django.db import models
 from django.db.models import CharField
 
 from .constants import (
-    ADMIN, CONF_CODE_MAX_LEN,
+    ADMIN,
+    CONF_CODE_MAX_LEN,
     EMAIL_MAX_LEN,
-    MODERATOR, ROLE_MAX_LEN,
-    USER, USERNAME_MAX_LEN,
+    MODERATOR,
+    ROLE_MAX_LEN,
+    USER,
+    USERNAME_MAX_LEN,
 )
 from .validators import not_me_username_validator, username_validator
 
@@ -48,11 +51,11 @@ class User(AbstractUser):
     )
 
     def email_user(
-            self,
-            message,
-            subject="Регистрация",
-            from_email="yamdb@gmail.com",
-            **kwargs
+        self,
+        message,
+        subject="Регистрация",
+        from_email="yamdb@gmail.com",
+        **kwargs
     ):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 

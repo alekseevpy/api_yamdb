@@ -12,7 +12,7 @@ urlpatterns = [
         name="redoc",
     ),
     path("api/", include("api.v1.urls", namespace="api_v1")),
-    path("api/", include("users.urls", namespace="api_users"))
+    path("api/", include("users.urls", namespace="api_users")),
 ]
 if settings.DEBUG:
     urlpatterns += static(
