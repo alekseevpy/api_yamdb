@@ -17,8 +17,8 @@ from .permissions import (
     IsAdminOrReadOnly,
     IsAuthorModeratorAdminOrReadOnly,
 )
-from .registration.confirmation import send_confirmation_code
-from .registration.token_generator import get_token_for_user
+from api_yamdb.users.registration import send_confirmation_code
+from api_yamdb.users.registration.token_generator import get_token_for_user
 from .serializers import (
     CategorySerializer,
     CommentSerializer,

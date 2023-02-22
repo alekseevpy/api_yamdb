@@ -11,7 +11,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="redoc.html"),
         name="redoc",
     ),
-    path("api/", include("api.urls", namespace="api")),
+    path("api/", include("api.v1.urls", namespace="api_v1")),
 ]
 if settings.DEBUG:
     urlpatterns += static(
