@@ -110,11 +110,6 @@ Windows
 python manage.py fill_my_db
 ```
 
-*Пример выполнения:*
-
-![image](https://downloader.disk.yandex.ru/preview/b942bcb2ad0aa630af342c98ffdd6a3718f39a7b25679fb58b1f24426e2a8b98/63f22c65/6gDXPm7i62ALz5qbg-cfFKmCyWvZ6jZ8_KWAPE51tkiC50ll-_12e-b44eu6MEBWMilrEBxGHmN2ljLCj-Ufnw%3D%3D?uid=0&filename=2023-02-19_12-58-59.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048)
-![image](https://downloader.disk.yandex.ru/preview/84b81c215f8b317bd8e2a677b2a5edfeef30b0a8d58eb3f54b9de8ad831ae429/63f22c9e/az_YIvLrt0qhNvGbFUJdCfQNTzFzF8b58tKdu4RfwrIw4pvL9ap7emNjeDKOOQhk8CAiZswaoX__WJXoZ8S54Q%3D%3D?uid=0&filename=2023-02-19_12-59-56.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048)
-
 - Запустить проект:
 
 ```bash
