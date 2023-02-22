@@ -39,10 +39,9 @@ class Command(BaseCommand):
         5) Логирует события levels: info & critical
         """
         first_el: int = 0
+        connection = sqlite3.connect(self.DB_PATH)
         try:
             logger.info(f"Starting import data from {file_path.name}")
-
-            connection = sqlite3.connect(self.DB_PATH)
             cursor = connection.cursor()
 
             with open(file_path, newline="", encoding="utf-8") as csv_file:

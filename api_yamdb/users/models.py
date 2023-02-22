@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
+from django.db.models import CharField
 
 from .constants import (
     CONF_CODE_MAX_LEN,
@@ -60,7 +61,7 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
         ordering = ("id",)
 
-    def __str__(self) -> str:
+    def __str__(self) -> CharField:
         return self.username
 
     def save(self, *args, **kwargs):
