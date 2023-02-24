@@ -1,5 +1,4 @@
 from django.db.models import Avg
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
@@ -73,12 +72,12 @@ class ReviewSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """Запрещает пользователям писать второе ревью на произведение."""
         request = self.context.get("request")
-        author = request.user
         title_id = self.context.get("view").kwargs.get("title_id")
-        title = get_object_or_404(Title, pk=title_id)
         if (
             request.method == "POST"
-            and Review.objects.filter(author=author, title=title).exists()
+            and Review.objects.filter(
+                author=request.user, title__id=title_id
+            ).exists()
         ):
             raise serializers.ValidationError(
                 "Писать второе ревью вне закона."
