@@ -16,6 +16,8 @@ from .validators import not_me_username_validator, username_validator
 
 
 class User(AbstractUser):
+    """Модель Пользователя."""
+
     ROLE_CHOICES = (
         (USER, "user"),
         (MODERATOR, "moderator"),
