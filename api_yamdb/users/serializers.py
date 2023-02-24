@@ -1,10 +1,8 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from users.constants import CONF_CODE_MAX_LEN, EMAIL_MAX_LEN, USERNAME_MAX_LEN
+from users.models import User
 from users.validators import not_me_username_validator, username_validator
-
-User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):

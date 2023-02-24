@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from core.permissions import IsAdmin
+from users.models import User
 from .registration.confirmation import send_confirmation_code
 from .registration.token_generator import get_token_for_user
 from .serializers import (
@@ -16,8 +17,6 @@ from .serializers import (
     UserProfileSerializer,
     UserSerializer,
 )
-
-User = get_user_model()
 
 
 class UserViewSet(ModelViewSet):
