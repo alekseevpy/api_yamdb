@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -50,34 +49,22 @@ class UserViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class SignUpView(APIView):
-    """CBV для регистрации пользователя и получения кода на почту."""
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def signup(request):
+    serializer = SignUpSerializer(data=request.data)
 
-    def post(self, request):
-        serializer = SignUpSerializer(data=request.data)
-        if serializer.is_valid():
-            username = serializer.validated_data.get("username")
-            email = serializer.validated_data.get("email")
-            try:
-                user, _ = User.objects.get_or_create(
-                    username=username, email=email
-                )
-                user.confirmation_code = send_confirmation_code(user)
-                user.save()
-                return Response(
-                    serializer.validated_data, status=status.HTTP_200_OK
-                )
-            except IntegrityError:
-                return Response(
-                    {
-                        "error": (
-                            "Данное имя пользователя или email "
-                            "уже используются"
-                        )
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.is_valid(raise_exception=True)
+
+    email = serializer.data["email"]
+    username = serializer.data["username"]
+
+    user, _ = User.objects.get_or_create(email=email, username=username)
+
+    user.confirmation_code = send_confirmation_code(user)
+    user.save()
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class GetAuthTokenView(APIView):

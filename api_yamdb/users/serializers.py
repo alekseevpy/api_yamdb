@@ -35,12 +35,37 @@ class SignUpSerializer(serializers.Serializer):
     username = serializers.CharField(
         max_length=USERNAME_MAX_LEN,
         required=True,
-        validators=[not_me_username_validator, username_validator],
+        validators=[username_validator],
     )
     email = serializers.EmailField(
         max_length=EMAIL_MAX_LEN,
         required=True,
     )
+
+    def validate(self, data):
+        """Запрещает пользователям присваивать себе имя me
+        и использовать повторные username и email."""
+
+        if data.get("username") == "me":
+            raise serializers.ValidationError(
+                "Использовать имя 'me' запрещено"
+            )
+
+        if not User.objects.filter(
+            username=data.get("username"), email=data.get("email")
+        ).exists():
+
+            if User.objects.filter(username=data.get("username")):
+                raise serializers.ValidationError(
+                    "Пользователь с таким username уже существует"
+                )
+
+            if User.objects.filter(email=data.get("email")):
+                raise serializers.ValidationError(
+                    "Пользователь с таким Email уже существует"
+                )
+
+        return data
 
 
 class GetAuthTokenSerializer(serializers.Serializer):

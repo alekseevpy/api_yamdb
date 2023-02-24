@@ -57,7 +57,14 @@ class User(AbstractUser):
         from_email="yamdb@gmail.com",
         **kwargs
     ):
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+        send_mail(
+            subject,
+            message,
+            from_email,
+            [self.email],
+            fail_silently=False,
+            **kwargs
+        )
 
     class Meta:
         verbose_name = "Пользователь"
