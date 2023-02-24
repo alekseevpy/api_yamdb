@@ -79,7 +79,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     http_method_names = ("get", "post", "delete", "patch")
 
     def get_serializer_class(self):
-        if self.action in ["list", "retrieve"]:
+        if self.action in ("list", "retrieve"):
             return TitleRetrieveSerializer
         return TitleWriteSerializer
 
