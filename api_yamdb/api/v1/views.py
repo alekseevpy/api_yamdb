@@ -43,19 +43,6 @@ class ReviewViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, title=self.get_title())
 
-    def create(self, request, *args, **kwargs):
-        try:
-            return super().create(request, *args, **kwargs)
-        except IntegrityError:
-            return Response(
-                {
-                    "error": (
-                        "Вы можете оставить лишь 1 отзыв на произведение!"
-                    )
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
 
 class CommentViewSet(ModelViewSet):
     """
