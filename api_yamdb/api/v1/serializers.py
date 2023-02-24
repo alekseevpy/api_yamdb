@@ -78,9 +78,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         title = get_object_or_404(Title, pk=title_id)
         if (
             request.method == "POST"
-            and Review.objects.filter(author=author, title=title)
-            .exists()
-            .exist()
+            and Review.objects.filter(author=author, title=title).exists()
         ):
             raise serializers.ValidationError(
                 "Писать второе ревью вне закона."
