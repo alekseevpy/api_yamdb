@@ -5,7 +5,7 @@ username_validator = UnicodeUsernameValidator()
 
 
 def not_me_username_validator(value):
-    if value == "me":
+    if value.lower() == "me":
         raise ValidationError(
             "Вы не можете использовать 'me' в качестве username"
         )

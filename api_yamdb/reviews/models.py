@@ -96,8 +96,7 @@ class Review(models.Model):
         ordering = ("id",)
         constraints = [
             models.UniqueConstraint(
-                name="unique_review",
-                fields=["author", "title"],
+                name="unique_review", fields=["author", "title"]
             ),
         ]
 
